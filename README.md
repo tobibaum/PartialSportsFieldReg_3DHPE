@@ -2,7 +2,7 @@
 
 This repository contains the code, data, and tutorials for the CVSports23 paper "Monocular 3D Human Pose Estimation for Sports Broadcasts using Partial Sports Field Registration".
 
-- **paper:** [![arXiv](https://img.shields.io/badge/arXiv-xxxx.xxxx-00ff00.svg)](https://arxiv.org/abs/xxxx.xxxx)
+- **paper:** [![arXiv](https://img.shields.io/badge/arXiv-2304.04437-00ff00.svg)](https://arxiv.org/abs/2304.04437)
 - **data:** [sciebo, 8.3GB](https://dshs-koeln.sciebo.de/s/IIEsyX2gHRmgtZr), password: `baumgartner`
 - **`.ueasset`:** [sciebo, 40MB](https://dshs-koeln.sciebo.de/s/IIEsyX2gHRmgtZr), password: `baumgartner`
 - **Tutorial for generating similar data:** [UE5_tutorial.md](UE5_tutorial.md)
