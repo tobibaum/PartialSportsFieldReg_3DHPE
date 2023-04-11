@@ -13,10 +13,10 @@ Using `matplotlib widgets` you can change each of the camera parameters and visu
 ![notebook2](../figs/notebook2_rev.gif)
 
 ### `3_partial_sportsfield_registration.ipynb`
-Using our novel method, we can determine all pairs of camera calibrations that are consistent with the lines in the scene. In this notebook we also compare the predicted vanishing points against the ground truth
+Using our novel method, we can determine all pairs of camera calibrations that are consistent with the lines in the scene. In this notebook we also compare the predicted vanishing points against the ground truth.
 
 ### `3b_actual_footage.ipynb`
-Applying the same method from notebook `3_partial_sportsfield_registration.ipynb` to actual footage allows to quickly find the one camera calibration that seems most reasonable.
+Applying the same method from notebook `3_partial_sportsfield_registration.ipynb` to actual footage allows to quickly find the one camera calibration that seems most reasonable. `x_off` shifts the camera in lane track direction. `cam_id` interpolates between the determined azimuth/elevation pairs.
 
 ![notebook3b](../figs/notebook3b.gif)
 
