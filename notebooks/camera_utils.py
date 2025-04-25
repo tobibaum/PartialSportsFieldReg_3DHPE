@@ -11,11 +11,14 @@ def draw_base(ax1, base_pts):
         #ax1.plot(*(bp_line/(lf*2)*w + shift).T, linewidth=2, color='black')
         ax1.plot(*bp_line.T, linewidth=2, color='black')
 
-def draw2d(ax1, lines_2ds, base_pts=None, color=None, trans_fun=None, w=1280, h=720, **kwargs):
+def draw2d(ax1, lines_2ds, base_pts=None, colors=[], trans_fun=None, w=1280, h=720, **kwargs):
     # projection plot
-    for lines_2d in lines_2ds:
+    for i_line, lines_2d in enumerate(lines_2ds):
         for i, l in enumerate(lines_2d):
-            col = color if color is not None else tab20(i)
+            if len(colors) > i_line:
+                col = colors[i_line]
+            else:
+                col = 'blue'
             if not 'linewidth' in kwargs:
                 kwargs['linewidth'] = 2
             if trans_fun is not None:
@@ -28,9 +31,45 @@ def draw2d(ax1, lines_2ds, base_pts=None, color=None, trans_fun=None, w=1280, h=
 
     ax1.set_ylim(-.35*w, w*.85)
     ax1.set_xlim(-.1*w, w*1.1)
-    
+
+def shelf_with_tray_markings(width=2, depth=.5, height=2, n_trays=6, n_marks=5):
+    # Define base wireframe lines
+    lines = []
+
+    # Vertical corners (4)
+    for x in [0, width]:
+        for y in [0, depth]:
+            lines.append([[x, y, 0], [x, y, height]])
+
+    # Bottom and top rectangles (8 lines)
+    lines += [
+        [[0, 0, 0], [width, 0, 0]],
+        [[width, 0, 0], [width, depth, 0]],
+        [[width, depth, 0], [0, depth, 0]],
+        [[0, depth, 0], [0, 0, 0]],
+        [[0, 0, height], [width, 0, height]],
+        [[width, 0, height], [width, depth, height]],
+        [[width, depth, height], [0, depth, height]],
+        [[0, depth, height], [0, 0, height]],
+    ]
+
+    # Trays (2 lines per tray) and their markings
+    for i in range(1, n_trays):
+        z = i * height / n_trays
+        # Tray surface edges
+        lines.append([[0, 0, z], [width, 0, z]])
+        lines.append([[0, depth, z], [width, depth, z]])
+
+        # Tray markings
+        for j in range(0, n_marks + 2):
+            x = j * width / (n_marks + 1)
+            lines.append([[x, 0, z], [x, depth, z]])
+    return np.array(lines)
+
+
+
 def draw_scene(res_dict, _lanes, ax=None, ax1=None, ax2=None, 
-                w=1280, h=720, fake_F=1, **kwargs):
+                w=1280, h=720, fake_F=1, colors=[], **kwargs):
     # compute for given params
     cam_pos = res_dict['cam_pos']
     view_dir = res_dict['view_dir']
@@ -40,14 +79,16 @@ def draw_scene(res_dict, _lanes, ax=None, ax1=None, ax2=None,
     
     # === vizualization ===
     # 3d and projected 2d lines (in 3d)
-    for sub_lanes in _lanes:
+    for i_sub, sub_lanes in enumerate(_lanes):
+        if len(colors) > i_sub:
+            col = colors[i_sub]
+        else:
+            col = 'blue'
         for i, l in enumerate(sub_lanes):
-            #ax.plot3D(*l.T, linewidth=3, c=tab20(i))
-            ax.plot3D(*l.T, linewidth=2, c='blue')
+            ax.plot3D(*l.T, linewidth=2, c=col)
             
     # draw the camera
-    ax.scatter(*cam_pos, s=50, color='orange')#tab10(0))
-    ax.plot3D(*np.vstack((cam_pos, cam_pos+view_dir*fake_F)).T, linewidth=5, c='green')#tab10(0))
+    ax.scatter(*cam_pos, s=50, color='orange')
     for j, ip in enumerate(image_plane):
         ax.plot3D(*np.vstack((cam_pos, ip + (ip-cam_pos)*(fake_F-1))).T, linewidth=3, color='black')
         if j >= len(image_plane)-1:
@@ -65,7 +106,7 @@ def draw_scene(res_dict, _lanes, ax=None, ax1=None, ax2=None,
     ax.set_zlabel('z')
 
     if ax1 is not None and lines_2ds is not None:
-        draw2d(ax1, lines_2ds, base_pts)
+        draw2d(ax1, lines_2ds, base_pts, w=w, h=h)
         
     return res_dict
 
